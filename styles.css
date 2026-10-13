@@ -36,7 +36,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* ---------- Mark ---------- */
 .mark { display: block; overflow: visible; }
 .mark .piece { fill: currentColor; transition: fill .4s var(--ease); }
-html[data-twotone="true"] :is(.mark--hero, .card__art .mark) .piece--top { fill: var(--accent); }
+html[data-twotone="true"] :is(.mark--hero, .card__art .mark, .mark--monogram) .piece--top { fill: var(--accent); }
 
 .wordmark {
   font-weight: 800;
@@ -208,16 +208,69 @@ html[data-twotone="true"] :is(.mark--hero, .card__art .mark) .piece--top { fill:
   border: 1px solid var(--line);
 }
 .card__art {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 260px;
   margin-bottom: 1.25rem;
 }
-.card__art .mark { max-height: 100%; width: auto; height: 100%; max-width: 70%; }
+.card__art .mark { width: 100%; height: 100%; }
 .card__art .mark[data-mark="minimal"] { height: 50%; }
 .card__art .mark[data-mark="hourglass"] { height: 65%; }
 .card h3 { margin: 0 0 .4rem; font-size: 1.15rem; }
 .card p { margin: 0; color: var(--muted); }
+
+/* Read the mark */
+.read {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+.read__stage { position: relative; height: min(70vh, 620px); }
+.mark--read { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.readings { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+.readings button {
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  font-size: .9rem;
+  font-weight: 600;
+  transition: background-color .2s, border-color .2s, color .2s;
+}
+.readings button:hover { border-color: var(--fg); }
+.readings button[aria-checked="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.read__caption { max-width: 38ch; min-height: 4.5em; margin: 0; font-size: 1.1rem; color: var(--muted); }
+
+/* Negative-space layers (finger, key) are hidden unless a reading or hover shows them */
+.mark .finger,
+.mark .key { fill: var(--accent); opacity: 0; transition: opacity .45s var(--ease), fill .45s var(--ease); }
+.mark .key { fill: color-mix(in srgb, var(--accent) 55%, var(--fg)); }
+
+#read[data-reading="s"] .finger { opacity: 1; }
+#read[data-reading="finger"] .finger--top { opacity: 1; }
+#read[data-reading="press"] .finger--top { opacity: 1; }
+#read[data-reading="press"] .key {
+  opacity: 1;
+  animation: key-press 2.4s var(--ease) infinite;
+}
+
+@keyframes key-press {
+  0%, 55%, 100% { fill: color-mix(in srgb, var(--accent) 55%, var(--fg)); }
+  65%, 80%      { fill: color-mix(in srgb, var(--accent) 25%, var(--fg)); }
+}
+
+/* Founder monogram */
+.monogram {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+.monogram__stage { position: relative; height: min(56vh, 480px); }
+.mark--monogram { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 /* Palettes */
 .palettes {
@@ -271,7 +324,63 @@ html[data-twotone="true"] :is(.mark--hero, .card__art .mark) .piece--top { fill:
 .tile--avatars  { grid-column: span 3; }
 .tile--lockups  { grid-column: span 3; }
 .tile--dividers { grid-column: span 3; }
-.tile--pattern  { grid-column: span 6; min-height: 340px; display: flex; align-items: flex-end; }
+.tile--easy     { grid-column: span 2; display: flex; flex-direction: column; align-items: flex-start; }
+.pattern-block  { grid-column: span 4; display: flex; flex-direction: column; gap: .75rem; }
+.tile--pattern  { flex: 1; min-height: 340px; display: flex; align-items: flex-end; }
+
+/* Texture states: subtle (minimal marks) and lips (berry-gradient lips) */
+.tile--pattern .pattern { transition: opacity .7s var(--ease); }
+.tile--pattern .pattern--lips { opacity: 0; }
+.texture-label--lips { display: none; }
+
+.tile--pattern[data-texture="lips"] .pattern--subtle { opacity: 0; }
+.tile--pattern[data-texture="lips"] .pattern--lips { opacity: .5; }
+.tile--pattern[data-texture="lips"] .texture-label--subtle { display: none; }
+.tile--pattern[data-texture="lips"] .texture-label--lips { display: inline; }
+
+.texture-switch {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.texture-switch button {
+  padding: .4rem .9rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--muted);
+  transition: background-color .2s, color .2s;
+}
+.texture-switch button[aria-checked="true"] { background: var(--fg); color: var(--bg); }
+.texture-switch button[data-texture-btn="lips"][aria-checked="true"] {
+  background: linear-gradient(115deg, #B81F3B, #73193C 52%, #5E2862);
+  color: #fff;
+}
+
+.easy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .7rem 1.4rem .7rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 1.05rem;
+  font-weight: 700;
+  transition: transform .15s var(--ease);
+}
+.easy-btn .mark { height: 2.4em; width: auto; }
+.easy-btn:hover .finger--top,
+.easy-btn:focus-visible .finger--top { opacity: 1; }
+.easy-btn:active { transform: translateY(1px) scale(.98); }
+.easy-btn:active .key { opacity: 1; }
+.tile__note { margin: 1rem 0 0; font-size: .85rem; color: var(--muted); }
 
 .icons { display: flex; align-items: flex-end; gap: 1rem; margin-bottom: 1.5rem; }
 .icon {
@@ -369,10 +478,14 @@ html[data-twotone="true"] :is(.mark--hero, .card__art .mark) .piece--top { fill:
 @media (max-width: 880px) {
   .hero { grid-template-columns: 1fr; min-height: auto; }
   .hero__stage { height: 52vh; }
-  .usage > .tile { grid-column: span 6; }
+  .read { grid-template-columns: 1fr; }
+  .read__stage { height: 52vh; }
+  .monogram { grid-template-columns: 1fr; }
+  .monogram__stage { height: 40vh; }
+  .usage > .tile, .usage > .pattern-block { grid-column: span 6; }
   .topbar .lockup .wordmark { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
+  * { transition: none !important; animation: none !important; }
 }

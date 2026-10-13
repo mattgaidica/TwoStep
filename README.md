@@ -5,6 +5,7 @@ A single-page, no-build demo of the Two Step logomark and its variations:
 - **Full mark**: the single piece rotated 180° and stacked (a 2 in outline, an S in negative space).
 - **Hourglass**: the pieces crushed together (offset 36.15 units).
 - **Minimal mark**: the pieces fully overlapped.
+- **Founder monogram (CG)**: the piece turned 90° clockwise reads as a C; the C flipped vertically reads as a G.
 
 Every variation is drawn from the one path in `assets/two-step-single.svg`, so the geometry is exact at any size.
 

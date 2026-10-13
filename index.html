@@ -16,6 +16,16 @@
   <svg class="sprite" aria-hidden="true" focusable="false">
     <defs>
       <path id="ts-piece" d="M124.19,0h32.21c2.17,0,3.94,1.76,3.94,3.94v36.15c0,22.14-8.97,42.18-23.48,56.69-14.51,14.51-34.54,23.48-56.69,23.48v.02H3.94c-2.17,0-3.94-1.76-3.94-3.94v-36.17h.01C.01,58.04,8.99,38,23.49,23.49,37.1,9.89,55.56,1.15,76.07.12c2.24-.11,4.11,1.7,4.11,3.94v32.29c0,2.02-1.53,3.74-3.54,3.91-9.66.84-18.33,5.11-24.8,11.58-7.25,7.25-11.73,17.27-11.73,28.33h-.01s.01.01.01.01h0s40.08-.01,40.08-.01c11.08,0,21.09-4.49,28.34-11.73,7.25-7.27,11.73-17.28,11.73-28.34V3.94c0-2.17,1.76-3.94,3.94-3.94Z"/>
+      <!-- Negative space inside one piece (the "finger"), traced from the inner edge of #ts-piece -->
+      <path id="ts-finger" d="M80.18,0V36.35c0,2.02-1.53,3.74-3.54,3.91-9.66.84-18.33,5.11-24.8,11.58-7.25,7.25-11.73,17.27-11.73,28.33h-.01s.01.01.01.01h0s40.08-.01,40.08-.01c11.08,0,21.09-4.49,28.34-11.73,7.25-7.27,11.73-17.28,11.73-28.34V0Z"/>
+      <clipPath id="ts-piece-clip"><use href="#ts-piece"/></clipPath>
+      <!-- Lips: the minimal mark's opening tips sit on exact 45° lines to its square corners;
+           that polyline is the lip line. The opening itself is one piece's finger leaf. -->
+      <clipPath id="ts-lip-upper"><polygon points="-10,130.27 40.11,80.2 120.25,40.1 170.35,-10 -10,-10"/></clipPath>
+      <clipPath id="ts-lip-lower"><polygon points="-10,130.27 40.11,80.2 120.25,40.1 170.35,-10 170.35,130.27"/></clipPath>
+      <clipPath id="ts-minimal-clip"><use href="#ts-piece"/><use href="#ts-piece" transform="rotate(180 80.175 60.135)"/></clipPath>
+      <clipPath id="ts-hole-a"><use href="#ts-finger"/></clipPath>
+      <clipPath id="ts-hole-b"><use href="#ts-finger" transform="rotate(180 80.175 60.135)"/></clipPath>
     </defs>
   </svg>
 
@@ -68,7 +78,7 @@
         <article class="card">
           <div class="card__art"><svg class="mark" data-mark="full"></svg></div>
           <h3>Full mark</h3>
-          <p>One piece, rotated 180° and stacked on itself. The outline reads as a <strong>2</strong>; the negative space between reads as an <strong>S</strong>.</p>
+          <p>One piece, rotated 180° and stacked on itself. The outline reads as a <strong>2</strong>; the negative space between reads as an <strong>S</strong>, with a bent finger tucked inside.</p>
         </article>
         <article class="card">
           <div class="card__art"><svg class="mark" data-mark="hourglass"></svg></div>
@@ -80,6 +90,25 @@
           <h3>Minimal mark</h3>
           <p>Fully overlapped. A quiet, brand-adjacent shape for section markers, avatars, and background texture.</p>
         </article>
+      </div>
+    </section>
+
+    <!-- Read the mark: readings hidden in the full mark's negative space -->
+    <section class="section" id="read" data-reading="mark">
+      <h2 class="section__title"><svg class="mark mark--bullet" data-mark="minimal"></svg>Read the mark</h2>
+      <div class="read">
+        <div class="read__stage">
+          <svg class="mark mark--read" data-reading-mark role="img" aria-label="Full mark with its negative-space readings"></svg>
+        </div>
+        <div class="read__panel">
+          <div class="readings" role="radiogroup" aria-label="Reading">
+            <button role="radio" data-reading-btn="mark">The mark</button>
+            <button role="radio" data-reading-btn="s">The S</button>
+            <button role="radio" data-reading-btn="finger">The finger</button>
+            <button role="radio" data-reading-btn="press">The press</button>
+          </div>
+          <p class="read__caption" id="read-caption"></p>
+        </div>
       </div>
     </section>
 
@@ -159,15 +188,25 @@
           </ol>
         </div>
 
-        <div class="tile tile--pattern">
-          <svg class="pattern" aria-hidden="true">
+        <div class="tile tile--easy">
+          <h4>Easy button</h4>
+          <button class="easy-btn" type="button">
+            <svg class="mark" data-reading-mark aria-hidden="true"></svg>
+            <span>Get it done</span>
+          </button>
+          <p class="tile__note">Hover or press: the finger lights up.</p>
+        </div>
+
+        <div class="pattern-block">
+        <div class="tile tile--pattern" id="texture" data-texture="subtle">
+          <svg class="pattern pattern--subtle" aria-hidden="true">
             <defs>
-              <pattern id="minimal-tile" patternUnits="userSpaceOnUse" width="96" height="88">
-                <g transform="translate(8 8) scale(0.3)">
+              <pattern id="minimal-tile" patternUnits="userSpaceOnUse" width="112" height="96">
+                <g transform="translate(4 6) scale(0.3)">
                   <use href="#ts-piece" transform="rotate(180 80.175 60.135)"/>
                   <use href="#ts-piece"/>
                 </g>
-                <g transform="translate(56 52) scale(0.3)">
+                <g transform="translate(60 54) scale(0.3)">
                   <use href="#ts-piece" transform="rotate(180 80.175 60.135)"/>
                   <use href="#ts-piece"/>
                 </g>
@@ -175,9 +214,67 @@
             </defs>
             <rect width="100%" height="100%" fill="url(#minimal-tile)"/>
           </svg>
+          <!-- Lips: the minimal mark split along its 45° lip line. One card-wide berry gradient
+               shows through the lips via an alpha mask; the upper lip is full strength, the lower slightly lighter. -->
+          <svg class="pattern pattern--lips" aria-hidden="true">
+            <defs>
+              <g id="lips-glyph">
+                <g clip-path="url(#ts-lip-upper)"><g clip-path="url(#ts-minimal-clip)">
+                  <rect x="-2" y="-2" width="164.35" height="124.27" fill="#fff"/>
+                </g></g>
+                <g clip-path="url(#ts-lip-lower)"><g clip-path="url(#ts-minimal-clip)">
+                  <rect x="-2" y="-2" width="164.35" height="124.27" fill="#fff" fill-opacity=".74"/>
+                </g></g>
+              </g>
+              <!-- Alternates the lips mark with a kiss print (assets/kiss.png) so the lips reading is explicit -->
+              <pattern id="lips-tile" patternUnits="userSpaceOnUse" width="112" height="96">
+                <use href="#lips-glyph" transform="translate(4 6) scale(0.3)"/>
+                <image href="assets/kiss.png" x="60" y="52" width="48" height="40" preserveAspectRatio="xMidYMid meet"/>
+              </pattern>
+              <mask id="lips-mask" style="mask-type: alpha"><rect width="100%" height="100%" fill="url(#lips-tile)"/></mask>
+              <linearGradient id="lips-gradient" x1="0" y1="0" x2="1" y2="0.55">
+                <stop offset="0" stop-color="#B81F3B"/>
+                <stop offset=".52" stop-color="#73193C"/>
+                <stop offset="1" stop-color="#5E2862"/>
+              </linearGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#lips-gradient)" mask="url(#lips-mask)"/>
+          </svg>
           <div class="pattern__copy">
-            <p class="eyebrow">Background texture</p>
+            <p class="eyebrow">
+              <span class="texture-label texture-label--subtle">Background texture</span>
+              <span class="texture-label texture-label--lips">Woman-founded, women-run</span>
+            </p>
             <p class="pattern__headline">HR and finance,<br>one step at a time.</p>
+          </div>
+        </div>
+        <div class="texture-switch" role="radiogroup" aria-label="Background texture">
+          <button role="radio" data-texture-btn="subtle">Subtle</button>
+          <button role="radio" data-texture-btn="lips">Woman-founded, women-run</button>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Founder monogram: single mark to CG -->
+    <section class="section" id="monogram">
+      <h2 class="section__title"><svg class="mark mark--bullet" data-mark="minimal"></svg>Founder's monogram</h2>
+      <div class="monogram">
+        <div class="monogram__stage">
+          <svg class="mark mark--monogram" id="cg-mark" role="img" aria-label="The single mark turning into the CG monogram"></svg>
+        </div>
+        <div class="monogram__panel">
+          <p class="eyebrow">Chantelle Gaidica</p>
+          <p class="read__caption" id="cg-caption"></p>
+          <div class="scrubber">
+            <input type="range" id="cg-scrub" min="0" max="1000" value="0" step="1" aria-label="Turn the single mark into CG">
+            <div class="scrubber__stops">
+              <button data-cg-stop="0">Single mark</button>
+              <button data-cg-stop="1">CG</button>
+            </div>
+          </div>
+          <div class="hero__actions">
+            <button class="btn" id="cg-play">Play</button>
           </div>
         </div>
       </div>

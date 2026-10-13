@@ -67,6 +67,66 @@
     if (!svg.hasAttribute("role")) svg.setAttribute("aria-hidden", "true");
   });
 
+  // ---------- Full mark with negative-space layers ----------
+  // The piece's band is a ring centered at (80.18, 80) with radii 40 and 80; its flat
+  // end (x = 80.18) sits beside the finger. The "key" is the last KEY_ANGLE degrees of
+  // that ring, cut along a radius.
+  const RING_CENTER = [80.18, 80];
+  const KEY_ANGLE = 30;
+
+  function keyPolygon() {
+    const [cx, cy] = RING_CENTER;
+    const a = (KEY_ANGLE * Math.PI) / 180;
+    const r = 100;
+    const ex = cx - Math.sin(a) * r;
+    const ey = cy - Math.cos(a) * r;
+    return `${cx},${cy} ${ex.toFixed(2)},${ey.toFixed(2)} ${cx + 1},${ey.toFixed(2)} ${cx + 1},${cy}`;
+  }
+
+  function buildReadingMark(svg) {
+    svg.replaceChildren();
+    svg.setAttribute("viewBox", `0 0 ${W} ${2 * H}`);
+    const pieceD = document.getElementById("ts-piece").getAttribute("d");
+    const fingerD = document.getElementById("ts-finger").getAttribute("d");
+
+    const top = el("g", { transform: `rotate(180 ${W / 2} ${H / 2})` });
+    const keyClip = el("g", { "clip-path": "url(#ts-piece-clip)" });
+    keyClip.append(el("polygon", { class: "key", points: keyPolygon() }));
+    top.append(
+      el("path", { class: "finger finger--top", d: fingerD }),
+      el("path", { class: "piece", d: pieceD }),
+      keyClip
+    );
+
+    const bottom = el("g", { transform: `translate(0 ${H})` });
+    bottom.append(
+      el("path", { class: "finger finger--bottom", d: fingerD }),
+      el("path", { class: "piece", d: pieceD })
+    );
+
+    svg.append(top, bottom);
+  }
+
+  document.querySelectorAll("svg[data-reading-mark]").forEach(buildReadingMark);
+
+  const READINGS = {
+    mark: "The full mark as drawn: one piece, rotated and stacked. Pick a reading to see what's hidden in it.",
+    s: "Both openings together trace an S, for Step, running through the middle of the 2.",
+    finger: "Inside the top piece, a bent finger: the knuckle at the upper left, the fingertip curling down at the upper right.",
+    press: "Read the end of the band as a key, and the finger is pressing it. Two Step as the easy button for HR and finance.",
+  };
+  const readSection = document.getElementById("read");
+  const readCaption = document.getElementById("read-caption");
+  const readButtons = document.querySelectorAll("[data-reading-btn]");
+
+  function setReading(key) {
+    readSection.dataset.reading = key;
+    readCaption.textContent = READINGS[key];
+    readButtons.forEach((b) => b.setAttribute("aria-checked", String(b.dataset.readingBtn === key)));
+  }
+  readButtons.forEach((b) => b.addEventListener("click", () => setReading(b.dataset.readingBtn)));
+  setReading("mark");
+
   // ---------- Hero morph ----------
   const heroMark = document.getElementById("hero-mark");
   const setHero = buildMark(heroMark, { fixedHeight: true });
@@ -182,6 +242,100 @@
   });
 
   render(0);
+
+  // ---------- Background texture: subtle / lips ----------
+  const texture = document.getElementById("texture");
+  const textureButtons = document.querySelectorAll("[data-texture-btn]");
+
+  function setTexture(key) {
+    texture.dataset.texture = key;
+    textureButtons.forEach((b) => b.setAttribute("aria-checked", String(b.dataset.textureBtn === key)));
+  }
+  textureButtons.forEach((b) => b.addEventListener("click", () => setTexture(b.dataset.textureBtn)));
+  setTexture("subtle");
+
+  // ---------- Founder monogram: single mark to CG ----------
+  // C = the piece rotated 90° clockwise. G = the C flipped vertically (a mirror, not a
+  // pure rotation); both were checked against the reference artwork.
+  const cgMark = document.getElementById("cg-mark");
+  const cgScrub = document.getElementById("cg-scrub");
+  const cgCaption = document.getElementById("cg-caption");
+  const cgPlay = document.getElementById("cg-play");
+  const cgStops = document.querySelectorAll("[data-cg-stop]");
+  const CG_W = 2 * H;
+  const CG_H = W;
+
+  cgMark.setAttribute("viewBox", `0 0 ${CG_W} ${CG_H}`);
+  const cPiece = el("use", { href: "#ts-piece", class: "piece piece--bottom" });
+  const gPiece = el("use", { href: "#ts-piece", class: "piece piece--top" });
+  cgMark.append(cPiece, gPiece);
+
+  const CG_CAPTIONS = {
+    start: "Start from the single mark: one piece, two copies stacked exactly on top of each other.",
+    end: "A quarter turn makes a C; a mirrored copy beside it makes a G. The founder's initials, drawn from the same piece.",
+  };
+
+  const phase = (t, a, b) => ease(Math.min(1, Math.max(0, (t - a) / (b - a))));
+
+  function placePiece(node, cx, cy, angle, flipY) {
+    node.setAttribute(
+      "transform",
+      `translate(${cx} ${cy}) scale(1 ${flipY}) rotate(${angle}) translate(${-W / 2} ${-H / 2})`
+    );
+  }
+
+  function renderCG(t) {
+    const turn = phase(t, 0, 0.4);
+    const split = phase(t, 0.4, 0.8);
+    const flip = phase(t, 0.5, 1);
+    const angle = 90 * turn;
+    const cy = CG_H / 2;
+    placePiece(cPiece, lerp(CG_W / 2, H / 2, split), cy, angle, 1);
+    placePiece(gPiece, lerp(CG_W / 2, CG_W - H / 2, split), cy, angle, Math.cos(Math.PI * flip));
+    cgScrub.value = Math.round(t * 1000);
+    cgCaption.textContent = t < 0.5 ? CG_CAPTIONS.start : CG_CAPTIONS.end;
+    cgStops.forEach((b) => b.classList.toggle("is-active", Math.abs(Number(b.dataset.cgStop) - t) < 0.001));
+  }
+
+  let cgAnim = null;
+  function cgTo(target, duration = 2200) {
+    if (cgAnim) cancelAnimationFrame(cgAnim);
+    const from = cgScrub.value / 1000;
+    if (reduceMotion || from === target) { renderCG(target); cgAnim = null; return; }
+    const span = duration * Math.abs(target - from);
+    let start = null;
+    const step = (now) => {
+      if (start === null) start = now;
+      const k = Math.min(1, (now - start) / span);
+      renderCG(lerp(from, target, k));
+      cgAnim = k < 1 ? requestAnimationFrame(step) : null;
+    };
+    cgAnim = requestAnimationFrame(step);
+  }
+
+  cgScrub.addEventListener("input", () => {
+    if (cgAnim) cancelAnimationFrame(cgAnim);
+    cgAnim = null;
+    renderCG(cgScrub.value / 1000);
+  });
+  cgStops.forEach((b) => b.addEventListener("click", () => cgTo(Number(b.dataset.cgStop), 1400)));
+  cgPlay.addEventListener("click", () => {
+    if (cgScrub.value / 1000 > 0.5) {
+      renderCG(0);
+      setTimeout(() => cgTo(1), 350);
+    } else {
+      cgTo(1);
+    }
+  });
+
+  renderCG(0);
+
+  // Plays once the first time the section scrolls into view.
+  new IntersectionObserver((entries, observer) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    observer.disconnect();
+    setTimeout(() => cgTo(1), 400);
+  }, { threshold: 0.6 }).observe(cgMark);
 
   // ---------- Palette & toggles ----------
   const STORAGE_KEY = "twostep-demo";
