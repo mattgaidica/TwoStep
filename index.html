@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en" data-palette="ledger" data-invert="false" data-twotone="false">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Two Step — Logomark</title>
+  <meta name="description" content="Two Step logomark explorations: full mark, hourglass, and minimal mark.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" id="favicon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Single source path, exported from assets/two-step-single.svg (viewBox 0 0 160.35 120.27) -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <path id="ts-piece" d="M124.19,0h32.21c2.17,0,3.94,1.76,3.94,3.94v36.15c0,22.14-8.97,42.18-23.48,56.69-14.51,14.51-34.54,23.48-56.69,23.48v.02H3.94c-2.17,0-3.94-1.76-3.94-3.94v-36.17h.01C.01,58.04,8.99,38,23.49,23.49,37.1,9.89,55.56,1.15,76.07.12c2.24-.11,4.11,1.7,4.11,3.94v32.29c0,2.02-1.53,3.74-3.54,3.91-9.66.84-18.33,5.11-24.8,11.58-7.25,7.25-11.73,17.27-11.73,28.33h-.01s.01.01.01.01h0s40.08-.01,40.08-.01c11.08,0,21.09-4.49,28.34-11.73,7.25-7.27,11.73-17.28,11.73-28.34V3.94c0-2.17,1.76-3.94,3.94-3.94Z"/>
+    </defs>
+  </svg>
+
+  <header class="topbar">
+    <a class="lockup lockup--small" href="#top" aria-label="Two Step">
+      <svg class="mark" data-mark="minimal"></svg>
+      <span class="wordmark">Two Step</span>
+    </a>
+    <div class="controls">
+      <div class="chips" role="radiogroup" aria-label="Palette">
+        <button class="chip" role="radio" data-set-palette="ledger" title="Ledger"><span></span></button>
+        <button class="chip" role="radio" data-set-palette="evergreen" title="Evergreen"><span></span></button>
+        <button class="chip" role="radio" data-set-palette="coral" title="Ink &amp; Coral"><span></span></button>
+      </div>
+      <button class="toggle" data-toggle="invert" aria-pressed="false">Invert</button>
+      <button class="toggle" data-toggle="twotone" aria-pressed="false">Two-tone</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero: interactive morph -->
+    <section class="hero">
+      <div class="hero__stage">
+        <svg class="mark mark--hero" id="hero-mark" role="img" aria-label="Two Step mark"></svg>
+      </div>
+      <div class="hero__panel">
+        <p class="eyebrow">Logomark study</p>
+        <h1 class="wordmark wordmark--hero">Two Step</h1>
+        <p class="hero__caption" id="hero-caption"></p>
+
+        <div class="scrubber">
+          <input type="range" id="scrub" min="0" max="1000" value="0" step="1" aria-label="Crush the two pieces together">
+          <div class="scrubber__stops">
+            <button data-stop="full">Full</button>
+            <button data-stop="hourglass">Hourglass</button>
+            <button data-stop="minimal">Minimal</button>
+          </div>
+        </div>
+        <div class="hero__actions">
+          <button class="btn" id="play">Play</button>
+          <span class="readout" id="readout"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Variations -->
+    <section class="section" id="variations">
+      <h2 class="section__title"><svg class="mark mark--bullet" data-mark="minimal"></svg>Variations</h2>
+      <div class="cards">
+        <article class="card">
+          <div class="card__art"><svg class="mark" data-mark="full"></svg></div>
+          <h3>Full mark</h3>
+          <p>One piece, rotated 180° and stacked on itself. The outline reads as a <strong>2</strong>; the negative space between reads as an <strong>S</strong>.</p>
+        </article>
+        <article class="card">
+          <div class="card__art"><svg class="mark" data-mark="hourglass"></svg></div>
+          <h3>Hourglass</h3>
+          <p>Crush the steps together and an hourglass appears: HR and finance work that is timely and time-bound.</p>
+        </article>
+        <article class="card">
+          <div class="card__art"><svg class="mark" data-mark="minimal"></svg></div>
+          <h3>Minimal mark</h3>
+          <p>Fully overlapped. A quiet, brand-adjacent shape for section markers, avatars, and background texture.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Color -->
+    <section class="section" id="color">
+      <h2 class="section__title"><svg class="mark mark--bullet" data-mark="minimal"></svg>Color</h2>
+      <div class="palettes">
+        <button class="palette" data-set-palette="ledger">
+          <span class="palette__swatches"><i style="--c:#15233F"></i><i style="--c:#F3EBDD"></i><i style="--c:#B8894A"></i></span>
+          <span class="palette__name">Ledger</span>
+          <span class="palette__hex">#15233F · #F3EBDD · #B8894A</span>
+          <span class="palette__note">Navy and warm sand. Trustworthy, financial, calm.</span>
+        </button>
+        <button class="palette" data-set-palette="evergreen">
+          <span class="palette__swatches"><i style="--c:#1E3A2F"></i><i style="--c:#F4F1E7"></i><i style="--c:#8FAE6E"></i></span>
+          <span class="palette__name">Evergreen</span>
+          <span class="palette__hex">#1E3A2F · #F4F1E7 · #8FAE6E</span>
+          <span class="palette__note">Forest and cream. Growth, people, steady progress.</span>
+        </button>
+        <button class="palette" data-set-palette="coral">
+          <span class="palette__swatches"><i style="--c:#1C1C22"></i><i style="--c:#FAF6F0"></i><i style="--c:#E2614A"></i></span>
+          <span class="palette__name">Ink &amp; Coral</span>
+          <span class="palette__hex">#1C1C22 · #FAF6F0 · #E2614A</span>
+          <span class="palette__note">Near-black with a warm accent. Modern, direct, human.</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- In use -->
+    <section class="section" id="in-use">
+      <h2 class="section__title"><svg class="mark mark--bullet" data-mark="minimal"></svg>In use</h2>
+
+      <div class="usage">
+        <div class="tile tile--icons">
+          <h4>App icon &amp; favicon</h4>
+          <div class="icons">
+            <span class="icon" style="--s:96px"><svg class="mark" data-mark="minimal"></svg></span>
+            <span class="icon" style="--s:56px"><svg class="mark" data-mark="minimal"></svg></span>
+            <span class="icon" style="--s:32px"><svg class="mark" data-mark="minimal"></svg></span>
+            <span class="icon" style="--s:16px"><svg class="mark" data-mark="minimal"></svg></span>
+          </div>
+          <div class="browser-tab">
+            <svg class="mark" data-mark="minimal"></svg>
+            <span>Two Step — Payroll</span>
+            <span class="browser-tab__x">×</span>
+          </div>
+        </div>
+
+        <div class="tile tile--avatars">
+          <h4>Avatar</h4>
+          <div class="avatars">
+            <span class="avatar" style="--s:112px"><svg class="mark" data-mark="hourglass"></svg></span>
+            <span class="avatar" style="--s:64px"><svg class="mark" data-mark="hourglass"></svg></span>
+            <span class="avatar" style="--s:40px"><svg class="mark" data-mark="hourglass"></svg></span>
+          </div>
+        </div>
+
+        <div class="tile tile--lockups">
+          <h4>Lockups</h4>
+          <div class="lockup lockup--horizontal">
+            <svg class="mark" data-mark="minimal"></svg>
+            <span class="wordmark">Two Step</span>
+          </div>
+          <div class="lockup lockup--stacked">
+            <svg class="mark" data-mark="full"></svg>
+            <span class="wordmark">Two Step</span>
+          </div>
+        </div>
+
+        <div class="tile tile--dividers">
+          <h4>Section markers</h4>
+          <div class="divider"><span></span><svg class="mark" data-mark="minimal"></svg><span></span></div>
+          <ol class="steps">
+            <li><svg class="mark" data-mark="minimal"></svg><b>01</b> People operations</li>
+            <li><svg class="mark" data-mark="minimal"></svg><b>02</b> Payroll &amp; benefits</li>
+            <li><svg class="mark" data-mark="minimal"></svg><b>03</b> Accounting &amp; close</li>
+          </ol>
+        </div>
+
+        <div class="tile tile--pattern">
+          <svg class="pattern" aria-hidden="true">
+            <defs>
+              <pattern id="minimal-tile" patternUnits="userSpaceOnUse" width="96" height="88">
+                <g transform="translate(8 8) scale(0.3)">
+                  <use href="#ts-piece" transform="rotate(180 80.175 60.135)"/>
+                  <use href="#ts-piece"/>
+                </g>
+                <g transform="translate(56 52) scale(0.3)">
+                  <use href="#ts-piece" transform="rotate(180 80.175 60.135)"/>
+                  <use href="#ts-piece"/>
+                </g>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#minimal-tile)"/>
+          </svg>
+          <div class="pattern__copy">
+            <p class="eyebrow">Background texture</p>
+            <p class="pattern__headline">HR and finance,<br>one step at a time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Two Step logomark study</span>
+    <a href="assets/two-step-single.svg" download>Download single mark (SVG)</a>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
